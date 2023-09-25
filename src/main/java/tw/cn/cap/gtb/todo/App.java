@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class App {
     public String getGreeting() {
@@ -54,6 +56,7 @@ public class App {
 
         if ("add".equals(args[0])) {
             final var taskName = Joiner.on(" ").join(Arrays.stream(args).skip(1).toArray(String[]::new));
+            System.out.println(taskName);
             Files.write(fileName, String.format("- %d ", (lineCount + 1)).concat(taskName.concat(System.lineSeparator())).getBytes(), StandardOpenOption.APPEND);
         }
 
@@ -83,6 +86,24 @@ public class App {
                     System.out.println("Empty");
                 }
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if ("remark".equals(args[0])) {
+            final var taskId = Arrays.stream(args).skip(1).toArray(String[]::new);
+
+            try (Stream<String> lines = Files.lines(fileName);
+                 Stream<String> modifiedLines = lines.map(line -> {
+                     if (Arrays.stream(taskId)
+                             .anyMatch(line::contains) && line.startsWith("-")) {
+                         return line.replace("-", "x");
+                     }
+                     return line;
+                 })) {
+                Files.write(fileName, modifiedLines.collect(Collectors.toList()),
+                        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
