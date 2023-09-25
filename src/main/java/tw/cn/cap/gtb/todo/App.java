@@ -92,7 +92,7 @@ public class App {
         }
 
         if ("mark".equals(args[0])) {
-            final var taskId = Arrays.stream(args).skip(1).toArray(String[]::new);
+            final var taskId = Arrays.stream(args).skip(1).filter(str -> str.matches("\\d+")).toArray(String[]::new);
 
             try (Stream<String> lines = Files.lines(fileName);
                  Stream<String> modifiedLines = lines.map(line -> {
@@ -111,12 +111,12 @@ public class App {
         }
 
         if ("remove".equals(args[0])) {
-            final var taskId = Arrays.stream(args).skip(1).toArray(String[]::new);
+            final var taskId = Arrays.stream(args).skip(1).filter(str -> str.matches("\\d+")).toArray(String[]::new);
             try (Stream<String> lines = Files.lines(fileName);
                  Stream<String> modifiedLines = lines.map(line -> {
                      String regex = "^(x|-).*"; // 以"x"或"-"开头的字符串的正则表达式
                      if (Arrays.stream(taskId)
-                             .anyMatch(line::contains) && line.matches(regex)) {
+                             .anyMatch(line::startsWith) && line.matches(regex)) {
                          return line.replaceAll(regex, "*");
                      }
                      return line;
