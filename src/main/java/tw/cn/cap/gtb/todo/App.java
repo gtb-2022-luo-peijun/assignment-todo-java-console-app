@@ -57,7 +57,6 @@ public class App {
 
         if ("add".equals(args[0])) {
             final var taskName = Joiner.on(" ").join(Arrays.stream(args).skip(1).toArray(String[]::new));
-            System.out.println(taskName);
             Files.write(fileName, String.format("- %d ", (lineCount + 1)).concat(taskName.concat(System.lineSeparator())).getBytes(), StandardOpenOption.APPEND);
         }
 
@@ -118,7 +117,6 @@ public class App {
                      String regex = "^(x|-).*"; // 以"x"或"-"开头的字符串的正则表达式
                      if (Arrays.stream(taskId)
                              .anyMatch(line::contains) && line.matches(regex)) {
-                         System.out.println(line.replaceAll(regex, "*"));
                          return line.replaceAll(regex, "*");
                      }
                      return line;
