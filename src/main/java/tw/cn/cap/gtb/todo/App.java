@@ -31,7 +31,7 @@ public class App {
         final var fileNameWithPath = filePath + File.separator + "tasks";
 
         if (!Files.exists(filePath) && !"init".equals(args[0])) {
-            System.out.println(String.format("Please run 'init' before running '%s' command.", args[0]));
+            System.out.println(String.format("Please run 'todo init' before running '%s' command.", args[0]));
             return;
         }
 
