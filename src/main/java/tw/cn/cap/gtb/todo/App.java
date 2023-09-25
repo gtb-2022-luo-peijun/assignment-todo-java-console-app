@@ -116,7 +116,7 @@ public class App {
                  Stream<String> modifiedLines = lines.map(line -> {
                      String regex = "^(x|-).*"; // 以"x"或"-"开头的字符串的正则表达式
                      if (Arrays.stream(taskId)
-                             .anyMatch(line::startsWith) && line.matches(regex)) {
+                             .anyMatch(line::contains) && line.matches(regex)) {
                          return line.replaceAll(regex, "*");
                      }
                      return line;
