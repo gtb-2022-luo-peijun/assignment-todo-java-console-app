@@ -91,7 +91,7 @@ public class App {
             }
         }
 
-        if ("remark".equals(args[0])) {
+        if ("mark".equals(args[0])) {
             final var taskId = Arrays.stream(args).skip(1).toArray(String[]::new);
 
             try (Stream<String> lines = Files.lines(fileName);
