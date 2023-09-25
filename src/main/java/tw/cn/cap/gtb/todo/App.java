@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -107,6 +108,27 @@ public class App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return;
+        }
+
+        if ("remove".equals(args[0])) {
+            final var taskId = Arrays.stream(args).skip(1).toArray(String[]::new);
+            try (Stream<String> lines = Files.lines(fileName);
+                 Stream<String> modifiedLines = lines.map(line -> {
+                     String regex = "^(x|-).*"; // 以"x"或"-"开头的字符串的正则表达式
+                     if (Arrays.stream(taskId)
+                             .anyMatch(line::contains) && line.matches(regex)) {
+                         System.out.println(line.replaceAll(regex, "*"));
+                         return line.replaceAll(regex, "*");
+                     }
+                     return line;
+                 })) {
+                Files.write(fileName, modifiedLines.collect(Collectors.toList()),
+                        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
         }
     }
 }
